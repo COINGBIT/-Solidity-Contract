@@ -1,0 +1,49 @@
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Coingbit {
+    address public owner;  // Adicionei uma variável para armazenar o endereço do proprietário do contrato
+    uint256 public gasUsed;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can call this function");
+        _;
+    }
+
+    function checkGasValue() external onlyOwner returns (uint256) {
+        uint256 startGas = gasleft();  // Armazena o gás inicial
+
+        // Lógica específica do contrato Coingbit aqui
+        // ...
+
+        gasUsed = startGas - gasleft();  // Calcula o gás usado
+        return gasUsed;
+    }
+}
+
+contract YourContract {
+    Coingbit public coingbitContract;
+    address public coingbitContractAddress = 0x297e1984BF7Da594a34E88Ecadf7B47bBbb3A5c2;
+
+    constructor() {
+        coingbitContract = Coingbit(coingbitContractAddress);
+    }
+
+    function yourFunction() external {
+        // Lógica da sua função aqui
+        // ...
+
+        // Chamada para verificar o gás no contrato Coingbit e obter o gás usado
+        uint256 gasUsed = coingbitContract.checkGasValue();
+
+        // Pode usar o valor de gasUsed conforme necessário
+    }
+}
+
+
+
